@@ -1,20 +1,42 @@
-import React from 'react';
-import ContactForm from './ContactForm';
+import React, { useRef, useEffect, useState } from "react";
+import ContactForm from "./ContactForm";
 
-const Contact = () => {
+const Contact: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target); // Para não continuar observando
+        }
+      },
+      { threshold: 0.2 } // 20% visível para ativar
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => {
+      if (sectionRef.current) observer.unobserve(sectionRef.current);
+    };
+  }, []);
+
   return (
     <section
-  id="contact"
-  className="w-full flex flex-col items-center bg-white dark:bg-[#020817]"
->
-
+      id="contact"
+      ref={sectionRef}
+      className={`w-full flex flex-col items-center bg-white dark:bg-[#020817] transition-all duration-[1200ms] ease-in-out 
+        ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+    >
       <h2 className="text-black dark:text-white text-center text-[32px] font-normal leading-none mt-20 max-md:mt-10">
         Contato
       </h2>
       <p className="text-black dark:text-white text-xl font-normal leading-[1.2] text-center mt-[23px] max-md:max-w-full">
         Vamos conversar sobre projetos e oportunidades.
       </p>
-      
+
       <div className="w-full max-w-[1160px] mt-[60px] max-md:max-w-full max-md:mt-10 px-5">
         <div className="gap-5 flex items-center max-md:flex-col max-md:items-center">
           {/* Coluna da esquerda */}

@@ -1,16 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 const Projects = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const projectImages = [
+    "/imagens/chambinho.png",
     "/imagens/sparkmind.png",
     "/imagens/grt.png",
     "/imagens/codigocerto.png",
     "/imagens/rioselection.png",
     "/imagens/bicraft.png",
-    "/imagens/tjb.png"
+    "/imagens/tjb.png",
   ];
+
+  const scrollAmount = 400;
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
   return (
     <section
@@ -21,18 +37,60 @@ const Projects = () => {
         Projetos
       </h2>
 
-      {/* Grid */}
-      <div className="w-full max-w-[1160px] mt-8 max-md:max-w-full flex flex-wrap gap-5 justify-center">
-        {projectImages.map((src, index) => (
-          <div key={index} className="w-[32%] max-md:w-full">
-            <img
-              src={src}
-              alt={`Project ${index + 1}`}
-              className="aspect-[1.8] object-cover object-top w-full rounded-2xl cursor-pointer hover:scale-105 transition-transform shadow-lg"
-              onClick={() => setSelectedImage(src)}
-            />
-          </div>
-        ))}
+      <div className="relative w-full mt-8">
+        {/* Seta esquerda */}
+        <button
+          onClick={scrollLeft}
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white dark:bg-black/70 dark:hover:bg-black rounded-full p-3 shadow-lg transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-6 h-6 text-black dark:text-white"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        {/* Carrossel */}
+        <div
+          ref={scrollRef}
+          className="w-full overflow-x-auto scrollbar-none flex gap-6 px-5 lg:px-10"
+        >
+          {projectImages.map((src, index) => (
+            <div
+              key={index}
+              className="flex-shrink-0 w-[400px] sm:w-[450px] lg:w-[550px] xl:w-[600px]"
+            >
+              <img
+                src={src}
+                alt={`Project ${index + 1}`}
+                className="h-[350px] w-full object-cover object-top rounded-2xl cursor-pointer hover:scale-105 transition-transform shadow-lg"
+                onClick={() => setSelectedImage(src)}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Seta direita */}
+        <button
+          onClick={scrollRight}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-white/70 hover:bg-white dark:bg-black/70 dark:hover:bg-black rounded-full p-3 shadow-lg transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-6 h-6 text-black dark:text-white"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
 
       {/* Modal */}
@@ -53,4 +111,3 @@ const Projects = () => {
 };
 
 export default Projects;
-
